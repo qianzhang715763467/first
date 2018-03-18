@@ -1,0 +1,75 @@
+*{
+	margin:0;
+	padding: 0;
+	box-sizing: border-box;
+}
+html,body{
+	width: 100%;
+	height: 100%;
+	overflow-y: auto;
+	overflow-x: hidden;
+}
+html{
+	font-size: 62.5%;
+	font-family: "微软雅黑";
+}
+li{
+	list-style: none;
+}
+a{
+	text-decoration: none;
+}
+i{
+	font-style: initial;
+}
+.icon {
+  /* 通过设置 font-size 来改变图标大小 */
+  width: 1em; height: 1em;
+  /* 图标和文字相邻时，垂直对齐 */
+  vertical-align: -0.15em;
+  /* 通过设置 color 来改变 SVG 的颜色/fill */
+  fill: currentColor;
+  /* path 和 stroke 溢出 viewBox 部分在 IE 下会显示
+     normalize.css 中也包含这行 */
+  overflow: hidden;
+}
+.active{
+	color: #007aff !important;
+}
+/* 详情页标签颜色 */
+.special-price{
+	color: red !important;
+	border-color: red !important;
+}
+.new-product{
+	color: #04bf04 !important;
+	border-color: #04bf04 !important;
+}
+.member{
+	color: #ff9800 !important;
+	border-color: #ff9800 !important;
+}
+/* swiper */
+ .swiper-container{
+	position: relative;
+}
+.swiper-container .swiper-slide{
+	position: relative;
+	overflow: hidden;
+    background-size: cover;
+    background-position: center;
+}
+.slide-img{
+	width: 100%;
+	height: calc(100% - 40px);
+	background-size: cover;
+    background-position: center;
+}
+.swiper-container .swiper-slide img{
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
+	margin: auto;
+}

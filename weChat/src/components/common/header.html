@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<meta charset="UTF-8">
+		<title>header</title>
+		<link rel="stylesheet" type="text/css" href="../../css/init.css"/>
+		<style type="text/css">
+			.wrap-nav{
+				position: fixed;
+				top:0;
+				left: 0;
+				right: 0;
+				z-index: 10;
+				padding: 4px 0;
+				width:100%;
+				font-size: 0;
+				background-color: #fff;
+			    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+			}
+			.wrap-nav .items{
+			}
+			.wrap-nav .item{
+				display: table-cell;
+			    overflow: hidden;
+			    width: 1%;
+			    height: 15px;
+			    text-align: center;
+			    font-size: 1.2rem;
+			    color: #929292;
+			    vertical-align: middle;
+			    white-space: nowrap;
+			    text-overflow: ellipsis;
+			}
+			.wrap-nav .item img{
+				height: 30px;
+			    vertical-align: middle;
+			}
+		</style>
+	</head>
+	<body>
+		<!-- 顶部导航  -->
+		<nav class="wrap-nav">
+			<ul class="items">
+				<li class="item">
+					<img src="../../img/logo.png"/>
+				</li>
+				<li class="item active">
+					<p class="item-text">精选好物</p>
+				</li>
+				<li class="item">
+					<p class="item-text">家居</p>
+				</li>
+				<li class="item">
+					<p class="item-text">下午茶</p>
+				</li>
+				<li class="item">
+					<p class="item-text">美妆</p>
+				</li>
+			</ul>
+		</nav>
+	</body>
+</html>

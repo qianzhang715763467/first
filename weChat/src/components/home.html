@@ -1,0 +1,78 @@
+<style type="text/css">
+	#home{
+		width: 100%;
+		height: 100%;
+		overflow: hidden;
+	}
+	#home .home-head{
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10;
+		padding: 4px 0;
+		width: 100%;
+		/*height: 3rem;*/
+		font-size: 0;
+		background-color: #fff;
+	    box-shadow: 0 1px 3px rgba(0, 0, 0, .3);
+	}
+	#home .home-head .item{
+		display: table-cell;
+	    overflow: hidden;
+	    width: 1%;
+	    height: 15px;
+	    text-align: center;
+	    font-size: 1.2rem;
+	    color: #929292;
+	    vertical-align: middle;
+	    white-space: nowrap;
+	    text-overflow: ellipsis;
+	}
+	#home .home-head .item img{
+		height: 30px;
+	    vertical-align: middle;
+	}
+	#home .home-main{
+		padding-top: 3rem;
+		width: 100%;
+		height: 100%;
+		overflow-x: hidden;
+		overflow-y: auto;
+	}
+</style>
+<div id="home">
+	<!-- 首页顶部导航 -->
+	<header class="home-head">
+		<ul class="items home-nav">
+			<li class="item">
+				<img src="src/img/logo.png"/>
+			</li>
+			<li class="item active" data-pageName="choiceness">
+				<p class="item-text">秒杀</p>
+			</li>
+			<li class="item" data-pageName="cost">
+				<p class="item-text">聚划算</p>
+			</li>
+			<li class="item" data-pageName="seckill">
+				<p class="item-text">精选好物</p>
+			</li>
+		</ul>
+	</header>
+	<div class="home-main"></div>
+</div>
+<script type="text/javascript">
+	if(index.href.length < 1){
+		window.location.hash = 'index/choiceness'; // 初始化当前模块hash
+	}
+	home = {
+		switchView:function(dom){// 点击顶部导航,改变hash
+			$(dom).children(':not(:first-child)').click(function(){
+				window.location.hash = 'index/'+$(this).attr('data-pageName'); 
+				$(dom).children().removeClass('active');
+				$(this).addClass('active');
+			});
+		}
+	};
+	home.switchView('.home-nav');
+	index.home = home;
+</script>

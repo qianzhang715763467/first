@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<title></title>
+		<link rel="stylesheet" type="text/css" href="src/css/init.css"/>
+		<link rel="stylesheet" type="text/css" href="src/css/choiceness.css"/>
+		<link rel="stylesheet" type="text/css" href="src/css/card.css"/>
+		<link rel="stylesheet" type="text/css" href="src/css/footer.css"/>
+		<link rel="stylesheet" type="text/css" href="src/iconFont/iconfont.css"/>
+		<link rel="stylesheet" type="text/css" href="src/css/swiper-4.1.6.min.css"/>
+		<link rel="stylesheet" type="text/css" href="src/css/details.css"/>
+		<script src="src/iconFont/iconfont.js"></script>
+	</head>
+	<body>
+		<div id="wrap">
+			<!-- 底部导航 -->
+			<footer class="wrap-foot">
+				<ul class="items"> 
+					<li class="item active" data-pageName="index">
+						<svg class="icon" aria-hidden="true">
+	                        <use xlink:href="#icon-tubiao-"></use>
+	                    </svg>
+						<p class="item-text">首页</p>
+					</li>
+					<li class="item" data-pageName="">
+						<svg class="icon" aria-hidden="true">
+	                        <use xlink:href="#icon-faxian"></use>
+	                    </svg>
+						<p class="item-text">发现</p>
+					</li>
+					<li class="item" data-pageName="">
+						<svg class="icon" aria-hidden="true">
+	                        <use xlink:href="#icon-qicheqianlian-"></use>
+	                    </svg>
+						<p class="item-text">消息</p>
+					</li>
+					<li class="item" data-pageName="">
+						<svg class="icon" aria-hidden="true">
+	                        <use xlink:href="#icon-gerenzhongxin"></use>
+	                    </svg>
+						<p class="item-text">我的</p>
+					</li>
+				</ul>
+			</footer>
+		</div>
+	</body>
+	<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+	<script src="src/js/swiper-4.1.6.min.js" type="text/javascript" charset="utf-8"></script>
+	<script src="src/js/router.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">
+		var index = {
+			href:window.location.href.split('#')[1],
+			route:function(state){// hash 改变
+				if(this.href){
+					if(state){// 一级路由
+						window.location.hash = '';// 设置初始化，防止两次路由一样刷新后不加载
+						window.location.hash = this.href.split('/')[0];
+					}else{// 二级路由
+						window.location.hash += '/'+this.href.split('/')[0] || this.href;
+					}
+				}else{
+					window.location.hash = 'index';
+				}
+				// 根据已加载的路由，跟新保存的 this.href的值
+				if(this.href && this.href.indexOf('/') > -1){
+					this.href = this.href.substring(this.href.indexOf('/')+1,this.href.length);
+				}else{
+					this.href = "";					
+				}
+			},
+			getPage:function(self,name){// 加载页面
+				var	dom = router[name].split('/');
+					dom = dom[dom.length-1];
+				var _this = this;
+				$(self).children().hide();
+				if($('#'+dom).length < 1){
+					$.ajax({
+						type:"get",
+						url:router[name]+'.html',
+						async:false,// 异步请求可能会判断节点失误，导致重复请求数据
+						success:function(req){
+							$(self).append(req);	
+							if(_this.href.length > 1){
+								_this.route();
+							}
+						}
+					});
+				}else{
+					$('#'+dom).show();
+					// 详情页返回时顶部导航高亮校正
+					$('.item[data-pageName='+dom+']').addClass('active').siblings().removeClass('active');
+				}
+			},
+			viewDetails:function(dom){// 点击卡片查看详情
+				$('#wrap').delegate(dom,'click',function(){
+					var hash = '';
+					if(window.location.hash.indexOf('/id=') > -1){
+						hash = window.location.hash.split('/id')[0]+'/id='+$(this).index();
+					}else{
+						hash = window.location.hash+'/id='+$(this).index();
+					}
+					window.location.hash = hash; 
+				})
+			}
+		}
+		// hash初始化
+		index.route(true);
+		index.viewDetails('.card');	
+		// 监听 hash，加载对应模块
+		window.onhashchange = function(){
+			var hash = window.location.hash;
+			switch (hash){
+				case '#index':case '##':
+				index.getPage('#wrap','home');
+					break;
+				case '#index/seckill':
+				index.getPage('.home-main','seckill');
+					break;
+				case '#index/cost':
+				index.getPage('.home-main','cost');
+					break;
+				case '#index/choiceness':
+				index.getPage('.home-main','choiceness');
+					break;
+				default:
+				index.getPage('#wrap','details');
+					break;
+			}
+		}
+	</script>
+</html>

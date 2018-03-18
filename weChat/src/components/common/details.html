@@ -1,0 +1,84 @@
+<style type="text/css">
+	#details .details-swiper-container {
+		width: 100%;
+		height: 20rem;
+	}
+</style>
+<div id="details">
+	<!-- 顶部轮播图  -->
+	<header class="details-head">
+		<!--<p class="title bar">
+			<span class="back" onclick="back()"> < </span>	
+		</p>-->
+		<div class="details-swiper-container swiper-container">
+			<div class="swiper-wrapper">
+				<div class="swiper-slide" style="background-image: url(src/img/jiaju/5a7d0955N97f84dfa.jpg);">
+				</div>
+				<div class="swiper-slide" style="background-image: url(src/img/jiaju/5a9dfd97N6d127d1a.jpg);">
+				</div>
+				<div class="swiper-slide" style="background-image: url(src/img/jiaju/5a9dfd5dNd2f6ced7.jpg);">
+				</div>
+				<div class="swiper-slide" style="background-image: url(src/img/jiaju/5a5d845bN29dc6ef8.jpg);">
+				</div>
+			</div>
+			<!-- 如果需要分页器 -->
+			<div class="swiper-pagination"></div>
+		</div>
+	</header>
+	<!-- 商品介绍   -->
+	<section class="details-merchandiseInfo">
+		<h4 class="title bar"> 耐克保暖运动鞋</h4>
+		<div class="label-list">
+			<span class="member">会员特价</span>
+			<span class="special-price">100减30</span>
+			<span class="new-product">当季上新</span>
+		</div>
+		<p class="intro">
+			这款耐克鞋采用了整体棕黄色的设计，十分符合当下流行的复古风运动风。高帮的设计十分保暖，并且在打球时可以保护脚踝，日常也可以穿哟！
+		</p>
+		<div class="card-footer">
+			<span class="card-link">1090￥</span>
+			<span class="card-link">/</span>
+			<span class="card-link">3980￥</span>
+		</div>
+	</section>
+	<!-- 商家信息  -->
+	<section class="details-businessmenInformation">
+		<div class="message">
+			<h4 class="name">牛油果小姐的店</h4>
+			<h5 class="location">静安区大沽路380号</h5>
+		</div>
+		<div class="contact">
+			<p>电话</p>
+			<p class="wechat">微信</p>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+	var mySwiper = new Swiper('.details-swiper-container', {
+		direction: 'horizontal',
+		loop: true,
+		autoplay: {
+		    delay: 3000,//5秒切换一次
+	  	},
+		// 如果需要分页器
+		pagination: {
+			el: '.swiper-pagination',
+		},
+		// 如果需要前进后退按钮
+		navigation: {
+			nextEl: '.swiper-button-next',
+			prevEl: '.swiper-button-prev',
+		}
+	})
+	function back(){
+		window.history.go(-1);
+		var str = window.location.hash.split('/')[0];
+		if(str.indexOf('#index') > -1){
+			str = '#home';
+		}else{
+		}
+		$('#wrap').children().hide();
+		$(str).show();
+	}
+</script>
