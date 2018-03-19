@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="UTF-8">
+        <title></title>
+        <style>
+        	*{
+        		margin: 0;
+        		padding: 0;
+        		box-sizing: border-box;
+        	}
+        	html,body{
+        		width: 100%;
+        		height: 100%;
+        		overflow: hidden;
+        	}
+            .login-wrap{
+            	width: 100%;
+            	height: 100%;
+            	/*background: url(/imgs/login.bmp);*/
+            	/*background-size: cover;
+            	background-repeat: no-repeat;*/
+            }
+            .bg{
+            	width: 100%;
+            	height: 100%;
+            	animation: image 1.5s;
+            }
+            .bg img{
+            	width: 100%;
+            	animation: opacityImg 0.2s;
+            }
+            .login-form{
+            	position: absolute;
+            	top: 0;
+            	left: 0;
+            	right: 0;
+            	bottom: 0;
+            	z-index: 99999;
+            	margin: auto;
+            	width: 300px;
+            	height: 400px;
+            }
+            .form-title{
+            	padding: 2px 0;
+            	margin-bottom: 20px;
+            	text-indent: 30px;
+            	color: #3891d3;
+            	border-left: 1px solid #3891d3;
+            }
+            .form-bar{
+            	width: 100%;
+            	height: 40px;
+            	border-radius: 3px;
+            	background-color: #fff;
+            	box-shadow: 0 0 1px 1px #ccc;
+            	margin-bottom: 10px;
+            	font-size: 12px;
+            	outline: none;
+            	overflow: hidden;
+            }
+            .form-bar.bar-transparent{
+            	margin: 0;
+            	border: none;
+            	box-shadow: none;
+            	background-color: transparent;
+            }
+            .form-bar .icon-box{
+            	display: block;
+            	float: left;
+            	width: 40px;
+            	height: 100%;
+            }
+            .icon-box img{
+            	margin-top: 5px;
+            	margin-left: 5px;
+            	width: 28px;
+            }
+            .form-bar input{
+            	float: left;
+            	width: calc(100% - 40px);
+            	height: 100%;
+            	border: none;
+            	outline: none;
+            }
+            .submit{
+            	outline: none;
+            	border: none;
+            	font-size: 15px;
+            	letter-spacing: 4px;
+            	color: #fff;
+            	background-color: #3992d4;
+            }
+            @keyframes opacityImg{
+            	from{opacity: 0.8;}
+            	to{opacity: 1;}
+            }
+            @keyframes image{
+            	from{transform: scale(1.2);}
+            	to{transform: scale(1);}
+            }
+        </style>
+    </head>
+    <body>
+        <div class="login-wrap">
+        	<div class="bg">
+        		<img src="/imgs/login.bmp"/>
+        	</div>
+            <form id="login-form" class="login-form">
+            	<h2 class="form-title">风云</h2>
+            	<section class="form-main">
+                	<h5 class="error-tip form-bar bar-transparent"></h5>
+                	<div class="form-bar">
+                		<span class="icon-box">
+                			<img src="/imgs/name.png"/>
+                		</span>
+                		<input id="username" type="text" name="userName" placeholder="请输入您的用户名">
+		                <i class="user icon"></i>
+                	</div>
+                	<div class="form-bar ">
+                		<span class="icon-box">
+                			<img src="/imgs/password.png"/>
+                		</span>
+                		<input id="password" type="password" name="password" placeholder="请输入您的密码">
+		                <i class="lock icon"></i>
+                	</div>
+                	<h5 class="error-tip form-bar bar-transparent"></h5>
+                	<input type="submit" name="submit" id="submit" class="form-bar submit" value="登录" />
+            	</section>
+            </form>
+        </div>
+    </body>
+</html>
