@@ -9,7 +9,7 @@
                             <svg-icon class="icons" id="icon-zoushi"></svg-icon>
                             <span>{{modulesData.lineChart1.title}}</span>
                         </h4>
-                        <aaa :params="modulesData.lineChart1"></aaa>
+                        <line-chart :params="modulesData.lineChart1"></line-chart>
                     </div>
                 </li>
                 <!--========================================风控模型拒绝==================================-->
@@ -21,13 +21,13 @@
                         </h4>
                         <div class="info chartBox">
                             <div class="circleBox">
-                                <pie-chart></pie-chart>
+                                <pie-chart :params="modulesData.pieChartData.pie"></pie-chart>
                             </div>
                             <ul class="infoList">
                             	<li v-for="row in modulesData.pieChartData.values">
                             		<p class="count">{{row.count}}</p>
-                                    <p class="ruleId">Rule-id:</p>
-                                    <p class="idNo" @mouseover="overShow(row)" @mouseout="outHide(row)">{{row.ruleId}}</p>
+                                    <p class="ruleId">{{row.name}}</p>
+                                    <p class="idNo" @mouseover="overShow(row)" @mouseout="outHide(row)">{{row.val}}</p>
                             	</li>
                             </ul>
                         </div>
@@ -62,7 +62,7 @@
                             <svg-icon class="icons" id="icon-zhexiantu"></svg-icon>
                             <span>{{modulesData.lineChart2.title}}</span>
                         </h4>
-                        <aaa :params="modulesData.lineChart2"></aaa>
+                        <line-chart :params="modulesData.lineChart2"></line-chart>
                     </div>
                 </li>
                 <!--========================================用户属性分布==================================-->
@@ -92,11 +92,10 @@
 </template>
 
 <script type="text/ecmascript-6">
-    import $ from 'jquery'
     import pieChart from './MiddleCharts/pieChart.vue'
     import scattergram from './MiddleCharts/scattergram.vue'
     import histogram from './MiddleCharts/histogram.vue'
-    import AAA from './MiddleCharts/lineChart1.vue'
+    import lineChart from './MiddleCharts/lineChart.vue'
 
     export default{
         name:'middleChartsBox',
@@ -106,7 +105,7 @@
                 modulesData:{
                 	lineChart1:{
                 		'title':'申请放款走势',
-                		'color':['#5793f3','#d14a61'],
+                		'color':['#666','#d14a61'],
 	                    'legend':['申请','放款'],
 	                    'xAxis':[
 	                        {
@@ -129,13 +128,17 @@
                 	},
                 	pieChartData:{
                 		'title':'风控模型拒绝',
+                		'pie':{
+                			"title":'通过率',
+                			'rotate':'80'
+                		},
             			'values':[
-            				{'count':1463 ,'ruleId':'SXSP-BD003'},
-            				{'count':1463 ,'ruleId':'SXSP-BD003'},
-            				{'count':1463 ,'ruleId':'SXSP-BD003'},
-            				{'count':1463 ,'ruleId':'SXSP-BD003'},
-            				{'count':1463 ,'ruleId':'SXSP-BD003'},
-            				{'count':1463 ,'ruleId':'SXSP-BD003'}
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控风控风控风控风控风控风控'},
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
+            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'}
             			]
                 	},
                 	progressData:{
@@ -143,7 +146,7 @@
                 		'time':2000,  //当前进度分布显示完整进度条所用的时间
             			'values':[
             				{'name':'1.申请' ,'val':'70'},
-            				{'name':'2.系统审批中','val':'90'},
+            				{'name':'2.审批中','val':'90'},
             				{'name':'3.待签约' ,'val':'80'},
             				{'name':'4.待放款' ,'val':'85'},
             				{'name':'5.已放款' ,'val':'90'}
@@ -151,7 +154,7 @@
                 	},
                 	lineChart2:{
                 		'title':'通过拒绝',
-                		'color':['#5793f3','#d14a61'],
+                		'color':['#666','#d14a61'],
 	                    'legend':['通过','拒绝'],
 	                    'xAxis':[
 	                        {
@@ -231,7 +234,7 @@
             'pie-chart':pieChart,
             'scattergram':scattergram,
             'histogram':histogram,
-            'aaa':AAA
+            'line-chart':lineChart
         },
         methods:{
             overShow(val){
@@ -251,21 +254,18 @@
         },
         mounted(){
             //当前进度分布显示完整进度条走动的动画：
-            var self=this;
             for(var i=0;i<this.$refs.innerProgress.length;i++){
-                this.modulesData.progressData.time=this.modulesData.progressData.values[i].val*this.modulesData.progressData.time/100;
-                $(self.$refs.innerProgress[i]).animate({
-                    width:`${self.modulesData.progressData.values[i].val}%`
-                },this.modulesData.progressData.time);
+                let time= this.modulesData.progressData.values[i].val/100 * this.modulesData.progressData.time;
+                this.$refs.innerProgress[i].style.transition = 'all '+ time/1000+'s';
+                this.$refs.innerProgress[i].style.width = `${this.modulesData.progressData.values[i].val}%`;
             }
         }
     }
 </script>
 
 <style lang="less" type="text/less" scoped>
-	@import url("./../../less/common");
     #middleChartsBox{
-        .w(100%);
+        width:100%;
         height:calc(~"100% - 12vh");
         padding-top:10px;
         background:#f3f4f6;
@@ -283,14 +283,14 @@
             transition:all .1s;
         }
         .middleCharts {
-            .w(100%);
-            .h(100%);
+        	width:100%;
+        	height:100%;
             ul.upperCharts{
                 padding-bottom:5px;
                 background:#f3f4f6;
                 li.charts{
                     float:left;
-                    .w(50%);
+                    width: 50%;
                     &:nth-child(1){
                         padding-right:5px;
                     }
@@ -299,45 +299,45 @@
                         overflow:hidden;
                     }
                     .box{
-                        .w(100%);
-                        .h(100%);
+                        width:100%;
+        				height:100%;
                         .info{
-                            .w(100%);
-                            .h(87%);
+                            width:100%;
+        					height:87%;
                             overflow:hidden;
                             .circleBox{
-                                .w(50%);
-                                .h(100%);
-                                padding:30px 20px 20px 20px;
-                                float:left;
+								float:left;
+                            	padding:30px 20px 20px;
+                            	width:50%;
+        						height:100%;
                                 .circle{
                                     position:relative;
-                                    .w(100%);
-                                    .h(100%);
                                     margin:0 auto;
+                                    width:100%;
+        							height:100%;
                                 }
                             }
                             ul.infoList{
-                                .w(50%);
-                                .h(100%);
+                                width:50%;
+        						height:100%;
                                 float:left;
                                 li{
-                                    .w(50%);
-                                    .h(calc(~"100% / 3"));
+                                	float:left;
                                     padding:5px 6px;
-                                    float:left;
-                                    p{
-
-                                    }
+                                    width:50%;
+                                    height:calc(~"100% / 3");
                                     p.count{
-                                        .h(40%);
+                                        height:40%;
                                         font-size:18px;
                                         color:#2f2f2f;
                                     }
                                     p.ruleId,p.idNo{
-                                        .h(30%);
+                                    	overflow: hidden;
+                                        height:30%;
                                         font-size:12px;
                                         color:#a8a7a8;
+                                        white-space: nowrap;
+										text-overflow: ellipsis;
                                     }
                                     p.ruleId{
                                         font-weight:bold;
@@ -352,7 +352,7 @@
                 padding-top:5px;
                 background:#f3f4f6;
                 li.charts{
-                    .w(25%);
+                    width:25%;
                     padding:0 5px;
                     &:last-child{
                     	padding-right:0px;
@@ -365,14 +365,15 @@
                     		overflow: initial;
                     	}
                     }
-                    ul.progress{
-                        .h(87%);
-                        .w(100%);
-                        padding:0 20px 5px 20px;
+                    ul.progress{ 
+                    	padding:0 20px 5px 20px;
+                    	width:100%;
+						height:100%;
                         li.progressList{
-                            .h(20%);
-                            padding:8px 0;
+                        	padding:8px 0;
+                            height:15%;
                             .progressName{
+                            	padding-bottom:5px;
                                 overflow:hidden;
                                 span{
                                     font-size:12px;
@@ -384,42 +385,40 @@
                                         float:right;
                                     }
                                 }
-                                padding-bottom:5px;
                             }
                             .outerProgress{
-                                .w(100%);
-                                .h(3px);
-                                overflow:hidden;
+                            	overflow:hidden;
+                            	width:100%;
+        						height:3px;
                                 border-radius:3px;
                                 background:#eef3f9;
                                 box-shadow: 0 0 5px #ddd inset;
                                 .innerProgress{
                                     display:block;
-                                    .h(3px);
-                                    .w(0);
+                                    width:0;
+        							height:3px;
                                     border-top-right-radius: 2px;
                                     border-bottom-right-radius: 2px;;
                                     background:#46cfbd;
                                 }
                             }
-
                         }
                     }
                 }
             }
             ul{
-                .w(100%);
-                .h(50%);
+            	width:100%;
+				height:50%;
                 li.charts{
                 	position: relative;
-                    .h(100%);
-                    .w(100%);
+                	width:100%;
+					height:100%;
                     float:left;
                     .box{
-                        .w(100%);
-                        .h(100%);
-                        padding:10px 8px 8px;
-                        overflow:hidden;
+                    	overflow:hidden;
+                    	padding:10px 8px 8px;
+                        width:100%;
+						height:100%;
                         border:1px solid #e6e6e6;
                         background:#fff;
                         h4{
@@ -437,7 +436,7 @@
                             }
                         }
                         .chartBox{
-                            .w(100%);
+                        	width:100%;
                             height:100%;
                         }
                     }

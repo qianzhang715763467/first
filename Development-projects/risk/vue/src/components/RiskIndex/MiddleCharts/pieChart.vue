@@ -1,6 +1,5 @@
 <template>
     <div id="pieChart" class="chartBox">
-        <div id="ruleChart" ref='circle'></div>
     </div>
 </template>
 
@@ -8,9 +7,9 @@
     import echarts from 'echarts';
     export default{
         name: 'pieChart',
+        props:['params'],
         data(){
         	return{
-        		percent:80,
         	}
         },
         methods: {
@@ -51,8 +50,8 @@
               	ctx.closePath();
                 this.canvasParams.angle += 20;
                 this.percentAge = parseInt((this.canvasParams.angle / 360) * 100);
-                if (this.canvasParams.angle >= this.percent / 100 * 360) {
-                 	this.percentAge = this.percent;
+                if (this.canvasParams.angle >= this.params.rotate / 100 * 360) {
+                 	this.percentAge = this.params.rotate;
                  	window.cancelAnimationFrame(this.timer);
              	};
              	ctx.save();
@@ -63,23 +62,19 @@
                 ctx.fillText(this.percentAge + '%', size/2 - ctx.measureText(this.percentAge + '%').width/2, -size/2+10);
                 ctx.font = '12px Arial';
                 ctx.fillStyle = '#a8a7a8';
-                ctx.fillText('拒绝率', size/2 - ctx.measureText("拒绝率").width/2, -size/2 + 25);
+                ctx.fillText(this.params.title, size/2 - ctx.measureText(this.params.title).width/2, -size/2 + 25);
                 ctx.closePath();
                 ctx.restore();
             }
         },
         mounted(){
-            this.createCanvas(this.$refs.circle,'font','#fb8561');
+			this.createCanvas(document.querySelector('#pieChart'),'font','#fb8561');
         }
     }
 </script>
 
 <style lang="less" type="text/less" scoped>
-	@import url("./../../../less/common");
-    #ruleChart{
+    #pieChart{
     	position: relative;
-    	overflow: hidden;
-    	width: 100%;
-    	height: 100%;
     }
 </style>

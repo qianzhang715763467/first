@@ -67,7 +67,7 @@ Array.prototype.ergodic = function(key){
 	return arr;
 }
 Vue.prototype.sendRequest= function($this,$url,$response,$name){
-	$this.axios.get("http://10.127.133.132"+$url)
+	$this.axios.get("http://localhost:8086/"+$url)
   	.then(function (response) {
   		$this[$response] = response.data;
   		if($name){

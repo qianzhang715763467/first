@@ -24,13 +24,13 @@ class RuleController extends Controller {
 		$select_rows = json_decode($this->request->get('select_rows'));
 		// 当前操作执行哪种行为？
 		if(($insert_rows != null) && (count($insert_rows) > 0)){
-			$result = $this->utaCtionSheet("增加",$insert_rows,$rm);
+			$this->insert($insert_rows,$rm);
 		}
 		if(($delete_rows != null) && (count($delete_rows) > 0)){
-			$result = $this->utaCtionSheet("删除",$delete_rows,$rm);
+			$this->delete($delete_rows,$rm);
 		}
 		if(($update_rows != null) && (count($update_rows) > 0)){
-			$result = $this->utaCtionSheet("修改",$update_rows,$rm);
+			$this->update($update_rows,$rm);
 		}
 		if(($select_rows != null) && (count($select_rows) > 0)){
 			$this->select($select_rows,$rm);
@@ -38,6 +38,94 @@ class RuleController extends Controller {
 		echo $rm->toJson();
     }
 	
+	// 增加规则集数据
+	function insert($rows,$rm) {
+		$result = ""; // 行为操作完成时的返回值
+		$conn	= null;
+		try{
+			$conn = MySqlDB::getConnection();
+	        $conn->begin();
+			
+			$obj = $this->formatData($rows);
+			$result = $conn->insert("rule",$obj['values'],$obj['colums']);
+			if($result){
+				$id = $conn->lastInsertId();
+				$conn->update("rule",["rule_id"],[$id], "id = ".$id);
+				$rm->setMessage ("规则新增成功");
+			}
+			$conn->commit();
+			$rm->setCode(1);// 向前端返回当前行为操作的状态
+		}catch(\Exception $ex){
+			$conn->rollback();
+			$rm->setCode(0);// 向前端返回当前行为操作的状态
+			$rm->setMessage("规则新增失败 ".$ex);
+		}finally{
+			$conn = null;
+		}
+	}
+	// 删除规则集数据
+	function delete($rows,$rm) {
+		$result = ""; // 行为操作完成时的返回值
+		$conn	= null;
+		try{
+			$conn = MySqlDB::getConnection();
+	        $conn->begin();
+			// 删除当前规则？ 先删除规则表（rule）中的数据，再删除关联表（rule_group）中对应的数据。
+            $result = $conn->delete("rule","id = ".$rows->id);
+			if($result){
+				$rm->setMessage ("规则删除成功");
+			}
+			$conn->commit();
+			$rm->setCode(1);// 向前端返回当前行为操作的状态
+		}catch(\Exception $ex){
+			$conn->rollback();
+			$rm->setCode(0);// 向前端返回当前行为操作的状态
+			$rm->setMessage("规则删除失败 ".$ex);
+		}finally{
+			$conn = null;
+		}
+	}
+	// 修改规则集数据
+	function update($rows,$rm) {
+		$result = ""; // 行为操作完成时的返回值
+		$conn	= null;
+		try{
+			$conn = MySqlDB::getConnection();
+	        $conn->begin();
+			
+			// 将当前规则添加到指定规则集中
+			if(array_key_exists('associatedData', $rows)){
+				$id = $rows->group_id;
+				$result = $conn->update("group", ['rule_count'], [$rows->rule_count], "id = ".$id);
+				if($result){
+					// 再将当前产品关联的所有规则集数据添加进关联表（group_product）中。
+					$colums = array("group_id","rule_id","enabled");
+					for ($i = 0; $i < count($rows->associatedData); $i++) {
+						$val = array(
+							$id,
+							$rows->associatedData[$i]->id,
+							$rows->associatedData[$i]->status
+						);	
+						$result = $conn->insert("rule_group", $val ,$colums);
+					}
+				}
+			}else{
+				$obj = $this->formatData($rows);
+				$result = $conn->update("rule", $obj['colums'], $obj['values'], "id=".$rows->rule_id);
+			}
+			if($result){
+				$rm->setMessage ("规则修改成功");
+			}
+			$conn->commit();
+			$rm->setCode(1);// 向前端返回当前行为操作的状态
+		}catch(\Exception $ex){
+			$conn->rollback();
+			$rm->setCode(0);// 向前端返回当前行为操作的状态
+			$rm->setMessage("规则修改失败 ".$ex);
+		}finally{
+			$conn = null;
+		}
+	}
 	// 查询规则
 	function select($rows,$rm) {
 		$result = ""; // 行为操作完成时的返回值
@@ -94,68 +182,7 @@ class RuleController extends Controller {
 			$conn = null;
 		}
     }
-	
-	
-	// 4中行为的具体操作	(行为，参数，返回到前端的约定规则)
-	function utaCtionSheet($name,$rows,$rm){
-		$result = ""; // 行为操作完成时的返回值
-		$conn	= null;
-		try{
-			$conn = MySqlDB::getConnection();
-	        $conn->begin();
-			if($name == "增加"){
-				$obj = $this->formatData($rows);
-//				return $rm->setMessage = $obj;
-				$result = $conn->insert("rule",$obj['values'],$obj['colums']);
-				if($result){
-					$id = $conn->lastInsertId();
-					$conn->update("rule",["rule_id"],[$id], "id = ".$id);
-					$rm->setMessage ("新增成功");
-				}
-			}
-			if($name == "修改"){// 只修改规则表（rule）？ 更新所有可修改字段
-				// 将当前规则添加到指定规则集中
-				if(array_key_exists('associatedData', $rows)){
-					$id = $rows->group_id;
-//					return $rm->setMessage = $rows;
-					$result = $conn->update("group", ['rule_count'], [$rows->rule_count], "id = ".$id);
-					if($result){
-						// 再将当前产品关联的所有规则集数据添加进关联表（group_product）中。
-						$colums = array("group_id","rule_id","enabled");
-						for ($i = 0; $i < count($rows->associatedData); $i++) {
-							$val = array(
-								$id,
-								$rows->associatedData[$i]->id,
-								$rows->associatedData[$i]->status
-							);	
-							$result = $conn->insert("rule_group", $val ,$colums);
-						}
-					}
-				}else{
-					$obj = $this->formatData($rows);
-					$result = $conn->update("rule", $obj['colums'], $obj['values'], "id=".$rows->rule_id);
-				}
-				if($result){
-					$rm->setMessage ("修改成功");
-				}
-			}
-			if($name == "删除"){
-				// 删除当前规则？ 先删除规则表（rule）中的数据，再删除关联表（rule_group）中对应的数据。
-	            $result = $conn->delete("rule","id = ".$rows->id);
-				if($result){
-					$rm->setMessage ("删除成功");
-				}
-			}
-			$conn->commit();
-			$rm->setCode(1);// 向前端返回当前行为操作的状态
-		}catch(\Exception $ex){
-			$conn->rollback();
-			$rm->setCode(0);// 向前端返回当前行为操作的状态
-			$rm->setMessage($name."失败 ".$ex);
-		}finally{
-			$conn = null;
-		}
-	}
+    
 	function formatData($data){
 		$values = [];
 		$colums = [];

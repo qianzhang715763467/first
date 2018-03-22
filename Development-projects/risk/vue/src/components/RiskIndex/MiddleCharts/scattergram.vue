@@ -1,6 +1,5 @@
 <template>
     <div id="scattergram" class="chartBox">
-        <div id="clientTypeChart" :style="{width:'100%',height:'100%'}"></div>
     </div>
 </template>
 
@@ -54,7 +53,7 @@
             	}
             	return seriesData;
         	},
-            clientTypeChart(){
+            chart(){
                 var option = {
                     title: {
                         text: ''
@@ -103,22 +102,14 @@
                     series: this.formatData()
                 };
                 // 使用刚指定的配置项和数据显示图表。
-                echarts.init(document.getElementById('clientTypeChart')).setOption(option);
+                echarts.init(document.getElementById('scattergram')).setOption(option);
             }
         },
         mounted(){
-            this.clientTypeChart();
+            this.chart();
         }
     }
 </script>
 
 <style lang="less" type="text/less" scoped>
-	@import url("./../../../less/common");
-    #clientType{
-        .w(100%);
-        .h(100%);
-        #clientTypeChart{
-            margin:0 auto;
-        }
-    }
 </style>

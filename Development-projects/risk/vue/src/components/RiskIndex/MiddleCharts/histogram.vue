@@ -1,7 +1,5 @@
 <template>
-    <div id="histogram" class="chartBox">
-        <div id="riskForecastChart" :style="{width:'100%',height:'100%'}"></div>
-    </div>
+    <div id="histogram" class="chartBox"></div>
 </template>
 
 <script type="text/ecmascript-6">
@@ -11,7 +9,6 @@
         props:['params'],
         data(){
         	return{
-
         	}
         },
         methods:{
@@ -33,7 +30,7 @@
             	}
             	return seriesData;
         	},
-            riskForecastChart(){
+            chart(dom){
                 var option = {
                     title: {
                         text: ''
@@ -77,23 +74,14 @@
                     series:this.formatData()
                 };
                 // 使用刚指定的配置项和数据显示图表。
-                echarts.init(document.getElementById('riskForecastChart')).setOption(option);
+                echarts.init(dom).setOption(option);
             }
         },
         mounted(){
-            this.riskForecastChart();
+            this.chart(document.querySelector('#histogram'));
         }
     }
 </script>
 
 <style lang="less" type="text/less" scoped>
-	@import url("./../../../less/common");
-    #riskForecast{
-        .w(100%);
-        .h(100%);
-        #riskForecastChart{
-            margin:0 auto;
-        }
-    }
-
 </style>

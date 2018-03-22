@@ -1,32 +1,32 @@
 <template>
     <div id="RiskHeader">
-        <ul class="chooseBtns">
-            <li>
-                <a href="javascript:;" @click="isCom='owner-loan'" :class="{active:isCom=='owner-loan'}">业主贷</a>
-            </li>
-            <li><a href="javascript:;" @click="isCom='staff-loan'" :class="{active:isCom=='staff-loan'}">员工贷</a></li>
-        </ul>
-        <component :is="isCom"></component>
-    </div>
+    	<ul class="items">
+			<li class="item" v-for="row in values">
+				<div class="item-icon iconBox">
+	                <svg-icon class="icons" :id="row.iconId"></svg-icon>
+	            </div>
+				<section class="item-content detailInfo">
+					<h6 class="item-title title">{{row.title}}</h6>
+					<p class="item-num num">{{row.num}}</p>
+					<p class="item-count">{{row.increaseRatio}}</p>
+				</section>
+			</li>
+		</ul>
+	</div>
 </template>
 
 <script type="text/ecmascript-6">
-    import axios from 'axios';
-    import $ from 'jquery'
-    import echarts from 'echarts';
-    import OwnerLoan from './riskMiddle/OwnerLoan.vue'
-    import StaffLoan from './riskMiddle/StaffLoan.vue'
     export default{
         name: 'RiskHeader',
         data(){
             return {
-                btnName:["业主贷","员工贷"],
-                isCom:'owner-loan'
+            	values:[
+            		{title:'大额业主贷',iconId:'icon-tubiaolunkuo_huaban',num:996,increaseRatio:'213'},
+                    {title:'家私贷',iconId:'icon-yue',num:396,increaseRatio:'45'},
+                    {title:'追加贷',iconId:'icon-yuqi',num:79,increaseRatio:'456'},
+                    {title:'总逾期率',iconId:'icon-yuqidelicai',num:'13.16%',increaseRatio:''}
+            	]
             }
-        },
-        components:{
-            'owner-loan':OwnerLoan,
-            'staff-loan':StaffLoan
         },
         method:{
         },
@@ -36,84 +36,60 @@
 </script>
 
 <style lang="less" type="text/less">
-	@import url("./../../less/common");
     #RiskHeader {
         position: relative;
-        .w(100%);
-        height:12vh;
-        min-height:95px;
-        ul.chooseBtns{
-            margin-top:3px;
-            .h(30px);
-            .l-h(40px);
-            background:#fff;
-            li{
-                float:left;
-                .w(100px);
-                .h(30px);
-                .l-h(30px);
-                text-align:center;
-                a{
-                    display:inline-block;
-                    .w(100%);
-                    .h(100%);
-                    color:#fff;
-                }
-                &:nth-child(1),&:nth-child(2){
-                    background:rgba(0,0,0,0.2);
-                }
-                .active{
-                    background:#2ac7c3;
-                }
-            }
-        }
-        /* 业主贷样式 */
-        .items-wrap{
-	    	height:calc(~"100% - 30px");
-	    	.items{
-	    		position: relative;
-				width: 100%;
-                padding-top: calc(~"12vh/2 - 55px");
-				.item{
-					display: flex;
-					flex-direction: unset;
-					float: left;
-					width: 25%;
-					overflow: hidden;
-					text-align:center;
-					.item-icon{
-						position:relative;
-						min-width: 50px;
-						width: 40%;
-						color: #5ea6ec;
-						font-weight: 600;
-						.icon{
-							position: absolute;
-							top: 0;
-							right: 10px;
-							bottom: 0;
-							margin: auto;
-							font-size: 1.4rem;
-						}
-					}
-					.item-content{
-						position: relative;
-						.item-title{
-							padding-top: 3px;
-							color: #a8a8a8;
-							text-align: center;
-						}
-						.item-num{
-							font-size: 1.5rem;
-						}
-					}
-					&:nth-of-type(3){
-						.icon{
-							font-size: 1.6rem;
-						}
+        padding: 10px 0;
+        width:100%;
+    	.items{
+    		position: relative;
+    		display: flex;
+			width: 100%;
+            padding-top: calc(~"12vh/2 - 55px");
+			.item{
+				display: flex;
+				flex-direction: unset;
+				width: 25%;
+				overflow: hidden;
+				text-align:center;
+				.item-icon{
+					position:relative;
+					padding-right: 10px;
+					min-width: 50px;
+					width: 40%;
+					text-align: right;
+					color: #5ea6ec;
+					font-size: 1.7rem;
+					.icon{
+						position: absolute;
+						top: 0;
+						bottom: 0;
+						right: 20px;
+						margin: auto;
 					}
 				}
-	    	}
-	    }
+				.item-content{
+					position: relative;
+					width: 75%;
+					text-align: left;
+					.item-title{
+						padding: 0px 0 8px;
+						font-size: 1rem;
+						color: #a8a8a8;
+					}
+					.item-num{
+						font-size: 1.5rem;
+					}
+					.item-count{
+						padding-bottom: 2px;
+						color: #666;
+					}
+				}
+				&:nth-of-type(3){
+					.icon{
+						font-size: 1.9rem;
+					}
+				}
+			}
+    	}
     }
 </style>

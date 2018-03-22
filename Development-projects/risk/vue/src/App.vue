@@ -108,23 +108,29 @@
             this.isOpen==true?$(this.childrenNavDom).show("slow"):$(this.childrenNavDom).hide("slow");
         }
     },
-      mounted(){
-        var fatherRouter=this.$route.fullPath.split("/")[1];
-          for(var i=0;i<this.fatherNav.length;i++){
-            switch(fatherRouter){
-                case this.fatherNav[i].name:this.curIndex=[i];
-                break;
-            }
+  	mounted(){
+	    var fatherRouter=this.$route.fullPath.split("/")[1];
+	    console.log(fatherRouter)
+      for(var i=0;i<this.fatherNav.length;i++){
+      	// 导航图标高亮
+        switch(fatherRouter){
+	        case this.fatherNav[i].name:
+	        this.curIndex = [i];
+	        break;
         }
-          console.log();
-          for(let i=0;i<this.fatherNav.length;i++){
-              if(this.$route.path.lastIndexOf("/")<=0&&this.$route.name==this.fatherNav[i].name){
-                  this.msgtxt.val=this.fatherNav[i].val;
-              }else if(this.$route.path.lastIndexOf("/")>0&&this.$route.name.substring(this.$route.name.lastIndexOf('/')+1)==this.childrenNav[i].name){
-                  this.msgtxt.val="风控策略引擎 > "+this.childrenNav[i].val;
-              }
-        }
+        // 路径中文指向
+        if(this.$route.path.lastIndexOf("/") <= 0 && this.$route.name == this.fatherNav[i].name){
+          this.msgtxt.val=this.fatherNav[i].val;
+          return;
+	      }
+	    }
+      // 刷新时子页面路径中文指向
+      for(var i=0;i<this.childrenNav.length;i++){
+      	if(this.$route.path.lastIndexOf("/") > 0 && this.$route.name.substring(this.$route.name.lastIndexOf('/')+1) == this.childrenNav[i].name){
+	          this.msgtxt.val="风控策略引擎 > "+this.childrenNav[i].val;
+	      }
       }
+  	}	
 	}
 </script>
 

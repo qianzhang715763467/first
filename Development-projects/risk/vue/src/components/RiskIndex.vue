@@ -28,6 +28,9 @@
 
 <style lang="less" type="text/less">
     #risk{
+    	display: flex;
+    	flex-direction: column;
+    	overflow: hidden;
         width:100%;
         height:100%;
         background:#fff;
