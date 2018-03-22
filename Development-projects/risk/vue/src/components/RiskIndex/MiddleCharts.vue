@@ -9,7 +9,7 @@
                             <svg-icon class="icons" id="icon-zoushi"></svg-icon>
                             <span>{{modulesData.lineChart1.title}}</span>
                         </h4>
-                        <line-chart :params="modulesData.lineChart1"></line-chart>
+                        <line-chart></line-chart>
                     </div>
                 </li>
                 <!--========================================风控模型拒绝==================================-->
@@ -21,7 +21,7 @@
                         </h4>
                         <div class="info chartBox">
                             <div class="circleBox">
-                                <pie-chart :params="modulesData.pieChartData.pie"></pie-chart>
+                                <pie-chart v-if="pie_start" :params="modulesData.pieChartData.pie"></pie-chart>
                             </div>
                             <ul class="infoList">
                             	<li v-for="row in modulesData.pieChartData.values">
@@ -62,7 +62,7 @@
                             <svg-icon class="icons" id="icon-zhexiantu"></svg-icon>
                             <span>{{modulesData.lineChart2.title}}</span>
                         </h4>
-                        <line-chart :params="modulesData.lineChart2"></line-chart>
+                        <line-chart2 @upup='rotate'></line-chart2>
                     </div>
                 </li>
                 <!--========================================用户属性分布==================================-->
@@ -96,35 +96,17 @@
     import scattergram from './MiddleCharts/scattergram.vue'
     import histogram from './MiddleCharts/histogram.vue'
     import lineChart from './MiddleCharts/lineChart.vue'
+    import lineChart2 from './MiddleCharts/lineChart2.vue'
 
     export default{
         name:'middleChartsBox',
         data(){
             return{
                 tooltip:false,
+                pie_start:false,// 控制通过率canvas什么时候开始绘制
                 modulesData:{
                 	lineChart1:{
                 		'title':'申请放款走势',
-                		'color':['#666','#d14a61'],
-	                    'legend':['申请','放款'],
-	                    'xAxis':[
-	                        {
-	                            'values':["2016-1", "2016-2", "2016-3", "2016-4", "2016-5", "2016-6", "2016-7", "2016-8", "2016-9", "2016-10", "2016-11", "2016-12"]
-	                        },
-	                        {
-	                            'values':["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9", "2015-10", "2015-11", "2015-12"]
-	                        }
-	                    ],
-	                    'series':[
-	                        {
-	                            'name':'申请',
-	                            'values':[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-	                        },
-	                        {
-	                            'name':'放款',
-	                            'values':[3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
-	                        }
-	                    ]
                 	},
                 	pieChartData:{
                 		'title':'风控模型拒绝',
@@ -133,47 +115,21 @@
                 			'rotate':'80'
                 		},
             			'values':[
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控风控风控风控风控风控风控'},
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'},
-            				{'count':1463 ,'name':'SXSP-BD003','val':'风控风控风控风控风控风控'}
             			]
                 	},
                 	progressData:{
                 		'title':'当前进度分布',
                 		'time':2000,  //当前进度分布显示完整进度条所用的时间
             			'values':[
-            				{'name':'1.申请' ,'val':'70'},
-            				{'name':'2.审批中','val':'90'},
-            				{'name':'3.待签约' ,'val':'80'},
-            				{'name':'4.待放款' ,'val':'85'},
-            				{'name':'5.已放款' ,'val':'90'}
+            				{'name':'1.申请' ,	'val':'0',	'field':'apply'},
+            				{'name':'2.审批中',	'val':'0',	'field':'pending_approval'},
+            				{'name':'3.待签约',	'val':'0',	'field':'pending_sign'},
+            				{'name':'4.待放款',	'val':'0',	'field':'pending_loan'},
+            				{'name':'5.已放款',	'val':'0',	'field':'loan'}
             			]
                 	},
                 	lineChart2:{
                 		'title':'通过拒绝',
-                		'color':['#666','#d14a61'],
-	                    'legend':['通过','拒绝'],
-	                    'xAxis':[
-	                        {
-	                            'values':["2016-1", "2016-2", "2016-3", "2016-4", "2016-5", "2016-6", "2016-7", "2016-8", "2016-9", "2016-10", "2016-11", "2016-12"]
-	                        },
-	                        {
-	                            'values':["2015-1", "2015-2", "2015-3", "2015-4", "2015-5", "2015-6", "2015-7", "2015-8", "2015-9", "2015-10", "2015-11", "2015-12"]
-	                        }
-	                    ],
-	                    'series':[
-	                        {
-	                            'name':'通过',
-	                            'values':[2.6, 5.9, 9.0, 26.4, 28.7, 70.7, 175.6, 182.2, 48.7, 18.8, 6.0, 2.3]
-	                        },
-	                        {
-	                            'name':'拒绝',
-	                            'values':[3.9, 5.9, 11.1, 18.7, 48.3, 69.2, 231.6, 46.6, 55.4, 18.4, 10.3, 0.7]
-	                        }
-	                    ]
                 	},
                 	scattergramData:{
                 		'title':'用户属性分布',
@@ -234,9 +190,14 @@
             'pie-chart':pieChart,
             'scattergram':scattergram,
             'histogram':histogram,
-            'line-chart':lineChart
+            'line-chart':lineChart,
+            'line-chart2':lineChart2
         },
         methods:{
+        	rotate(msg){
+        		this.modulesData.pieChartData.pie.rotate = msg;
+        		this.pie_start = true;
+        	},
             overShow(val){
                 if(!this.tooltip){
                     this.tooltip = true;
@@ -250,15 +211,56 @@
             },
             outHide(){
                 this.tooltip = false;
-            }
+            },
+            // 风控模型拒绝详细数据
+            pieDetail(){
+            	var self = this;
+				self.axios.get("http://ds.idc.xiwanglife.com/dataservice/getconfig.do?id=421").then(function (res) {
+					let arr = res.data.details.key1.values;
+					for(let i = 0; i < 6; i++){
+						self.modulesData.pieChartData.values.push({
+							'count':arr[i].c,
+							'name':arr[i].ruleid,
+							'val':arr[i].rules_detail
+						})
+					}
+				}).catch(function (res) {
+			  		console.log(res);
+			  	});
+            },
+            // 进度分布数据
+	        progress(){
+	        	var self = this;
+				self.axios.get("http://ds.idc.xiwanglife.com/dataservice/getconfig.do?id=429").then(function (res) {
+					let obj = res.data.details.list.values[0];
+					let total = 0;// 总件数
+					for(let k in obj){
+						if(k.indexOf('pcs') > -1){
+							total += obj[k]
+						}
+					}
+					for(let i = 0; i < self.modulesData.progressData.values.length; i++){
+						let row = self.modulesData.progressData.values[i]; 
+						let amt = obj[row['field']+'_amt'];// 金额
+						let pcs = obj[row['field']+'_pcs'];// 件数
+						let rotate = (pcs/total*100).toFixed(0);
+						row.name += '（'+pcs+' 件，'+amt/10000+' 万元'+'）';
+						row.val = rotate;
+					}
+					//当前进度分布显示完整进度条走动的动画：
+		            for(var i=0;i<self.$refs.innerProgress.length;i++){
+		                let time= self.modulesData.progressData.values[i].val/100 * self.modulesData.progressData.time;
+		                self.$refs.innerProgress[i].style.transition = 'all '+ time/1000+'s';
+		                self.$refs.innerProgress[i].style.width = `${self.modulesData.progressData.values[i].val}%`;
+		            }
+				}).catch(function (res) {
+			  		console.log(res);
+			  	});	
+	        }
         },
         mounted(){
-            //当前进度分布显示完整进度条走动的动画：
-            for(var i=0;i<this.$refs.innerProgress.length;i++){
-                let time= this.modulesData.progressData.values[i].val/100 * this.modulesData.progressData.time;
-                this.$refs.innerProgress[i].style.transition = 'all '+ time/1000+'s';
-                this.$refs.innerProgress[i].style.width = `${this.modulesData.progressData.values[i].val}%`;
-            }
+        	this.pieDetail();
+        	this.progress();
         }
     }
 </script>

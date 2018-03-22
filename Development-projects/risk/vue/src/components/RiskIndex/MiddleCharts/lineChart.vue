@@ -7,13 +7,84 @@
     export default{
         name: 'lineChart1',
         data(){
-        	return{}
+        	return{
+        		count:0,
+        		chartData:{
+        			'color':['#666','#d14a61'],
+	                'legend':['申请','放款'],
+	                'xAxis':[
+	                    {
+	                        'values':["", "", "", "", "", "", "", "", "", "", "", ""]
+	                    },
+	                    {
+	                        'values':["", "", "", "", "", "", "", "", "", "", "", ""]
+	                    }
+	                ],
+	                'series':[
+	                    {
+	                        'name':'申请',
+	                        'values':[0, 0, 0, 0, 0, 0, 0, 0, 0,2.6, 5.9, 9.0 ]
+	                    },
+	                    {
+	                        'name':'放款',
+	                        'values':[0, 0, 0, 0, 0, 0, 0, 0,0,3.9, 5.9, 11.1]
+	                    }
+	                ]
+        		}
+        	}
         },
-        props:['params'],
+        watch:{
+        	count(newVal,oldVal){
+        		if(newVal == 2){
+        			this.chart();
+        		}
+        	}
+        },
         methods: {
+        	ready(){
+        		// 申请数据
+            	this.getData(432,'month(begintime)','apply_amt',0);
+            	// 放款数据
+            	this.getData(433,'month(batchdate)','loan_batch_success_amt',1);
+        	},
+        	getData(urlID,month,amt,size){
+        		var self = this;
+        		let d = new Date().getFullYear();// 当前年份
+        		self.axios.get("http://ds.idc.xiwanglife.com/dataservice/getconfig.do?id="+urlID).then(function (res) {
+					let arr = res.data.details.key1.values;
+					let last_month = arr[arr.length-1][month];//获取到的最后一个月份
+					// 说明当前最后一个月份的 12 月 指的是上一年的12月
+					if(last_month == 12 && arr[arr.length-2][month] != 11){
+						let newLast = arr[arr.length-2][month];//获取到的最后一个月份
+						for(let i = newLast; i < 12;i++){
+							self.chartData.xAxis[size].values[i-newLast] = d-1+'-'+(i+1);
+							self.chartData.series[size].values[i-newLast] = 0;
+						}
+						self.chartData.xAxis[size].values[11-newLast] = d-1+'-12';
+						self.chartData.series[size].values[11-newLast] = arr[arr.length-1][amt]/10000;
+						for(let i = 0; i < arr.length-1; i++){
+							self.chartData.xAxis[size].values[12-newLast+i] = d+'-'+arr[i][month];
+							self.chartData.series[size].values[12-newLast+i] = arr[i][amt]/10000;
+						}
+					}else{
+						// 正常情况下
+						for(let i = last_month; i < 12;i++){
+							self.chartData.xAxis[size].values[i-last_month] = d-1+'-'+(i+1);
+							self.chartData.series[size].values[i-last_month] = 0;
+						}
+						for(let i = 0; i < arr.length; i++){
+							self.chartData.xAxis[size].values[12-last_month+i] = d+'-'+arr[i][month];
+							self.chartData.series[size].values[12-last_month+i] = arr[i][amt]/10000;
+						}
+					}
+					self.count ++;
+			  	}).catch(function (res) {
+			  		console.log(res);
+			  	});
+        	},
         	formatData(){// 格式化图标数据 xAxis & series
     			let xAxisData = []; // series 数据
-            	for(let i = 0; i < this.params.xAxis.length; i++){
+            	for(let i = 0; i < this.chartData.xAxis.length; i++){
         			xAxisData.push({
                         type: 'category',
                         axisTick: {
@@ -22,7 +93,7 @@
                         axisLine: {
                             onZero: false,
                             lineStyle: {
-                                color: (i == 1?this.params.color[0]:this.params.color[1])
+                                color: (i == 1?this.chartData.color[0]:this.chartData.color[1])
                             }
                         },
                         axisLabel:{
@@ -30,24 +101,24 @@
                         },
                         axisPointer: {
                             label: {
-                                formatter: function (params) {
-                                   let name = (i == 1?this.params.legend[0]:this.params.legend[i+1]);
-                                    return name + params.value + (params.seriesData.length ? '：' + params.seriesData[0].data : '');
+                                formatter: function (chartData) {
+                                   let name = (i == 1?this.chartData.legend[0]:this.chartData.legend[i+1]);
+                                    return name + chartData.value + (chartData.seriesData.length ? '：' + chartData.seriesData[0].data : '');
                                 }.bind(this)
                             }
                         },
-                        data: this.params.xAxis[i].values
+                        data: this.chartData.xAxis[i].values
                     })
             	}
             	
     			let seriesData = []; // series 数据
-            	for(var i = 0; i < this.params.series.length; i++){
+            	for(var i = 0; i < this.chartData.series.length; i++){
         			seriesData.push({
-                        name:this.params.series[i].name,
+                        name:this.chartData.series[i].name,
                         type:'line',
                         xAxisIndex: (i == 0? 1:0),
                         smooth: true,
-                        data: this.params.series[i].values
+                        data: this.chartData.series[i].values
                     })
             	}
             	return {
@@ -57,7 +128,7 @@
         	},
             chart() {
                 var option = {
-                    color: this.params.color,
+                    color: this.chartData.color,
                     tooltip: {
                         trigger: 'none',
                         axisPointer: {
@@ -68,7 +139,7 @@
                         orient: 'vertical',
                         borderWidth:1,
                         right:0,
-                        data:this.params.legend
+                        data:this.chartData.legend
                     },
                     grid: {
                         left: '3%',
@@ -92,7 +163,7 @@
             }
         },
         mounted(){
-            this.chart();
+        	this.ready();
         }
     }
 </script>

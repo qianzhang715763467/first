@@ -21,16 +21,30 @@
         data(){
             return {
             	values:[
-            		{title:'大额业主贷',iconId:'icon-tubiaolunkuo_huaban',num:996,increaseRatio:'213'},
-                    {title:'家私贷',iconId:'icon-yue',num:396,increaseRatio:'45'},
-                    {title:'追加贷',iconId:'icon-yuqi',num:79,increaseRatio:'456'},
-                    {title:'总逾期率',iconId:'icon-yuqidelicai',num:'13.16%',increaseRatio:''}
+            		{title:'大额业主贷',iconId:'icon-tubiaolunkuo_huaban',num:'',increaseRatio:'','field':'YZDDE0001'},
+                    {title:'家私贷',iconId:'icon-yue',num:'',increaseRatio:'','field':'YZDJS0001'},
+                    {title:'追加贷',iconId:'icon-yuqi',num:'',increaseRatio:'','field':'YZDZJ0001'},
+                    {title:'总逾期率',iconId:'icon-yuqidelicai',num:'0.00%',increaseRatio:'','field':''}
             	]
             }
         },
-        method:{
-        },
         mounted(){
+        	var self = this;
+			self.axios.get("http://ds.idc.xiwanglife.com/dataservice/getconfig.do?id=418").then(function (res) {
+				let arr = res.data.details.list.values;
+				for(let j = 0; j < self.values.length; j++){
+					for(let i = 0; i < arr.length; i++){
+						if(arr[i].specificid == self.values[j].field){
+							self.values[j].num = arr[i].apply_amt/10000+'w';
+							self.values[j].increaseRatio = arr[i].apply_cnt;
+						}
+					}
+				}
+		  	}).catch(function (res) {
+		  		console.log(res);
+		  	});
+        },
+        method:{
         }
     }
 </script>
