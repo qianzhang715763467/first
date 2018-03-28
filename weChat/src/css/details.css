@@ -1,5 +1,6 @@
 #details{
 	position: relative;
+	padding-bottom: 50px;
 	width: 100%;
 	height: auto;
 }
@@ -11,7 +12,7 @@
 #details .details-head{
 	position: relative;
 	padding-top: 0;
-	height: 35vh;
+	height: 45vh;
 }
 #details .details-head .details-swiper-container{
 	height: 100%;

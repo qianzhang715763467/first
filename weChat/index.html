@@ -111,6 +111,12 @@
 		// 监听 hash，加载对应模块
 		window.onhashchange = function(){
 			var hash = window.location.hash;
+			if(hash.indexOf('/id') < 0){
+				$('#details').hide();
+				if(hash.indexOf('#index') > -1){
+					$('#home').show();
+				}
+			}
 			switch (hash){
 				case '#index':case '##':
 				index.getPage('#wrap','home');
