@@ -1,0 +1,46 @@
+#seckill .card{
+	display: block;
+	margin-top: 10px;
+	margin-bottom: 10px;
+	width: 100%;
+	border: none;
+}
+#seckill .card-media{
+	height: 15rem;
+}
+#seckill .card-media img{
+	width: auto;
+}
+#seckill .mui-card-content-inner{
+	padding: 10px;
+	border-bottom: 1px solid #ccc;
+}
+#seckill .mui-card-content-inner p:first-child{
+	font-size: 1.7rem;
+	color: #333;
+} 
+#seckill .mui-card-content-inner .foot{
+	position: relative;
+	padding: 5px 0;
+	padding-top: 1rem;
+	width: 100%;
+	box-sizing: initial;
+}	
+#seckill .mui-card-content-inner .foot .head-portrait{
+	position: absolute;
+	top: 5px;
+	left: 0;
+	width: 3rem;
+	height: 3rem;
+	border-radius: 50%;
+	border: 1px solid #ccc;
+	overflow: hidden;
+}
+#seckill .mui-card-content-inner .foot .head-portrait img{
+	width: 100%;
+}
+#seckill .mui-card-content-inner .foot p{
+	padding-left: 4rem;
+	font-size:1.2rem;
+	color: #999;
+}

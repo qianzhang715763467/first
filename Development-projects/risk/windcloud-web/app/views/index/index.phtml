@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+	</head>
+	<body></body>
+	<script src="/js/jquery-1.8.3.js" type="text/javascript" charset="utf-8"></script>
+	<script type="text/javascript">$(function() {
+	var str = {
+		approve_action: "通过",
+		base_weight: "",
+		cal_depend_field: "json.risk_detail.description",
+		cal_depend_field_type: 0,
+		cal_type_2_cal_field: "",
+		cal_type_3_cal_dep_field: "",
+		cal_type_3_cal_field: "",
+		calculate_field: "json.result_desc.ANTIFRAUD.risk_items[].risk_name=身份证命中法院失信名单",
+		calculate_type: "",
+		cfit_weight: "",
+		create_author: "小张",
+		desc: "命中匹配字段",
+		enabled: 0,
+		interface_id: "3",
+		match_mode: "0",
+		rule_name: "身份证命中法院失信名单-0",
+		submit_field: "手机号",
+		threshold: ""
+	}
+	$.ajax({
+		type: "get",
+		url: "/rule/ruleGoodsCatagory",
+		data: {
+			'insert_rows': JSON.stringify(str)
+		},
+		async: true,
+		success: function(res) {
+			console.log(JSON.parse(res));
+			console.log(res);
+		}
+	});
+})</script>
+</html>
