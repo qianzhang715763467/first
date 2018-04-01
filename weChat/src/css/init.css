@@ -2,6 +2,7 @@
 	margin:0;
 	padding: 0;
 	box-sizing: border-box;
+	-webkit-overflow-scrolling: touch;
 }
 html,body{
 	width: 100%;
@@ -34,7 +35,7 @@ i{
   overflow: hidden;
 }
 .active{
-	color: #007aff !important;
+	color: #fff !important;
 }
 /* 详情页标签颜色 */
 .special-price{

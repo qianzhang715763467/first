@@ -30,3 +30,6 @@
 	width: .8em; 
 	height: .8em;
 }
+.wrap-foot .active{
+	color: #007aff !important;
+}
